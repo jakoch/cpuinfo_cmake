@@ -130,32 +130,49 @@ jobs:
                   run_id: run[0]
                 });
                 } catch (error) {
-                    // ignore errors
-                  }
+                  // ignore errors
+                }
             }
 
-      - name: ✂ Clear cache
+      - name: ✂ Remove 14 days old caches
         uses: actions/github-script@v6 # https://github.com/actions/github-script
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
+            const days_to_expiration = 14;
+            const ms_in_day = 86400000;
+            const now = Date.now();
             try {
               const caches = await github.rest.actions.getActionsCacheList({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
               })
-              for (const cache of caches.data.actions_caches) {
-                console.log(`[Deleting] Cache ID ${cache.id}'.`);
-                try {
-                  github.rest.actions.deleteActionsCacheById({
-                    owner: context.repo.owner,
-                    repo: context.repo.repo,
-                    cache_id: cache.id,
-                  })
-                } catch (error) {
-                  // ignore errors
-                }
+              if (caches.data.actions_caches.length > 0) {
+                for (const cache of caches.data.actions_caches) {
+                  // cache.created_at
+                  const cacheCreationDate = new Date(cache.created_at);
+                  const timeSinceCreation = now - cacheCreationDate.getTime();
+                  const daysSinceCreation = timeSinceCreation / ms_in_day;
+                  // cache.last_accessed_at
+                  const lastAccessedDate = new Date(cache.last_accessed_at);
+                  const timeSinceLastAccess = now - lastAccessedDate.getTime();
+                  const daysSinceLastAccess = timeSinceLastAccess / ms_in_day;
+                  // both older than
+                  if (daysSinceCreation <= days_to_expiration && daysSinceLastAccess <= days_to_expiration) {
+                    console.log(`[Deleting] Cache ID ${cache.id} is older than ${days_to_expiration} days.`);
+                    try {
+                      await github.rest.actions.deleteActionsCacheById({
+                        owner: context.repo.owner,
+                        repo: context.repo.repo,
+                        cache_id: cache.id,
+                      })
+                    } catch (error) {
+                      // ignore errors
+                      // console.log(`Failed to delete cache ${cache.key};\n\n${error}`);
+                    }
+                  }
               }
             } catch (error) {
-                // ignore errors
+              // ignore errors
+              // console.log(`Failed to getActionsCacheList.\n\n${error}`);
             }
