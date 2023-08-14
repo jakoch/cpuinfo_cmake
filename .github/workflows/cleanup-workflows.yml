@@ -10,6 +10,10 @@ on:
   # You can manually run this workflow.
   workflow_dispatch:
 
+# action: write is needed to clear the cache
+permissions:
+  actions: write
+
 jobs:
 
 # ---------------------------------------------------------------------------------------
@@ -125,7 +129,33 @@ jobs:
                   repo: context.repo.repo,
                   run_id: run[0]
                 });
-              } catch (error) {
+                } catch (error) {
+                    // ignore errors
+                  }
+            }
+
+      - name: ✂ Clear cache
+        uses: actions/github-script@v6 # https://github.com/actions/github-script
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            try {
+              const caches = await github.rest.actions.getActionsCacheList({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+              })
+            } catch (error) {
                 // ignore errors
+            }
+            for (const cache of caches.data.actions_caches) {
+              console.log(`[Deleting] Cache ID ${cache.id}'.`);
+              try {
+                github.rest.actions.deleteActionsCacheById({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  cache_id: cache.id,
+                })
+              } catch (error) {
+                  // ignore errors
               }
             }
