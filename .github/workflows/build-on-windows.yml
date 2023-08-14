@@ -85,7 +85,7 @@ jobs:
 
     #   - name: Upload Artifact -> project_build_folder
     #     if: ${{ success() && steps.cpuinfo_generated.conclusion == 'success' }}
-    #     uses: actions/upload-artifact@v1
+    #     uses: actions/upload-artifact@v3
     #     with:
     #       name: project_build_folder
     #       path: ${{github.workspace}}\build
@@ -104,7 +104,7 @@ jobs:
 
     #   - name: Upload Artifact -> test_project_build_folder
     #     if: ${{ failure() && steps.configure_test.conclusion == 'failure' }}
-    #     uses: actions/upload-artifact@v1
+    #     uses: actions/upload-artifact@v3
     #     with:
     #       name: test_project_build_folder
     #       path: ${{github.workspace}}\test\build
@@ -150,7 +150,7 @@ jobs:
         run: 7z a -tzip -mx9 "${{env.ARTIFACT_NAME}}.zip" .\artifacts\*
 
       - name: Upload Artifact -> Release Artifact (continous)
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v3
         with:
           name: ${{env.ARTIFACT_NAME}}
           path: ${{github.workspace}}\artifacts
