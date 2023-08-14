@@ -1,0 +1,162 @@
+#
+# .github/workflows/build-on-windows.yml
+#
+# Copyright 2023 Jens A. Koch.
+# SPDX-License-Identifier: MIT License
+# This file is part of https://github.com/jakoch/cpuinfo_cmake
+#
+
+name: "Build on Windows"
+
+on: [push, pull_request]
+
+jobs:
+
+# ---------------------------------------------------------------------------------------
+
+  build-on-windows-2022:
+
+# ---------------------------------------------------------------------------------------
+
+    name: "Windows VC17"
+    runs-on: windows-2022
+
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - { NAME: "Release", PRESET: "vc17-x64-windows-static-rel-ci"}
+
+    defaults:
+      run:
+        shell: cmd
+
+    steps:
+
+      - name: 🤘 Checkout Code
+        uses: actions/checkout@v3 # https://github.com/actions/checkout
+
+      # https://community.chocolatey.org/packages/ninja
+      # https://community.chocolatey.org/packages/cmake
+      - name: 🔽 Install Ninja
+        run: choco install ninja cmake -y --no-progress
+
+      - name: 🛠️ Show Tool Versions
+        run: |
+          date /T
+          time /T
+          ninja --version
+          cmake --version
+
+      - name: 🛠️ Setup Visual Studio Developer Command Prompt
+        uses: ilammy/msvc-dev-cmd@v1
+
+      - name: ✏ CMake ➔ Configure (cpuinfo and escaper project)
+        run: cmake --preset=${{matrix.config.PRESET}}
+
+      - name: 🙏 CMake ➔ Build | Target ➔ cpuinfo
+        run: cmake --build build --target=cpuinfo
+
+      - name: ❔ CHECK important folders, to see if everything is present (after building)
+        run: |
+          dir /S /B build
+
+      - name: 🚦 Run CPUINFO
+        working-directory: ${{github.workspace}}\build
+        run: cpuinfo.exe
+
+      - name: 🚦 List cpuinfo.json
+        working-directory: ${{github.workspace}}\build
+        run: |
+          type cpuinfo.json
+          del cpuinfo.json
+
+      - name: 🙏 CMake ➔ Build | Target ➔ escaper
+        run: cmake --build build --target=escaper
+
+      - name: ❔ CHECK important folders, to see if everything is present (after building)
+        run: |
+          dir /S /B build
+
+      - name: Run Escaper ➔ Generate CPUINFO.cmake
+        id: cpuinfo_generated
+        working-directory: ${{github.workspace}}\build
+        run: escaper
+
+    #   - name: Upload Artifact -> project_build_folder
+    #     if: ${{ success() && steps.cpuinfo_generated.conclusion == 'success' }}
+    #     uses: actions/upload-artifact@v1
+    #     with:
+    #       name: project_build_folder
+    #       path: ${{github.workspace}}\build
+
+      - name: Copy CPUINFO.cmake to cmake folder of test project
+        working-directory: ${{github.workspace}}\build
+        run: |
+          mkdir -p ${{github.workspace}}\test\cmake
+          copy CPUINFO.cmake ${{github.workspace}}\test\cmake
+          copy ..\cmake\*.* ${{github.workspace}}\test\cmake
+
+      - name: ✏ CMake ➔ Configure (test project)
+        id: configure_test
+        working-directory: ${{github.workspace}}\test
+        run: cmake --preset=${{matrix.config.PRESET}}
+
+    #   - name: Upload Artifact -> test_project_build_folder
+    #     if: ${{ failure() && steps.configure_test.conclusion == 'failure' }}
+    #     uses: actions/upload-artifact@v1
+    #     with:
+    #       name: test_project_build_folder
+    #       path: ${{github.workspace}}\test\build
+
+      - name: 🙏 CMake ➔ Build | Target ➔ hello_cpuinfo
+        working-directory: ${{github.workspace}}\test
+        run: cmake --build build --target=hello_cpuinfo
+
+      - name: ❔ CHECK important folders, to see if everything is present (after building)
+        working-directory: ${{github.workspace}}\test
+        run: |
+          dir /S /B build
+
+      - name: 🚦 Run hello_cpuinfo
+        working-directory: ${{github.workspace}}\test\build
+        run: hello_cpuinfo
+
+        # Build Artifact Name: cpuinfo_cmake-1.2.3-cda6a2q-vc17-x64-static-rel
+        # preset: "vc17-x64-windows-static-rel-ci" -> "vc17-x64-static-rel"
+      - name: ✏ Fetch Versioning Data & Set Artifact Name
+        shell: pwsh
+        run: |
+            $NAME=$(jq -r .name version.json)
+            $VERSION=$(jq -r .version version.json)
+            $SHORT_HASH=$($env:GITHUB_SHA.substring(0,7))
+            $PRESET=$(("${{matrix.config.PRESET}}" -split "-")[0,1,3,4] -join "-")
+            $ARTIFACT_NAME="$NAME-$VERSION-$SHORT_HASH-$PRESET"
+            echo "Artifact Name:" $ARTIFACT_NAME
+            echo "ARTIFACT_NAME=$($ARTIFACT_NAME)" >> $env:GITHUB_ENV
+            echo "VERSION=$($VERSION)" >> $env:GITHUB_ENV
+
+      - name: Collect artifacts
+        run: |
+          mkdir .\artifacts
+          mkdir .\artifacts\cmake
+          mkdir .\artifacts\bin
+          copy ${{github.workspace}}\test\cmake\CPUINFO.cmake .\artifacts\cmake
+          copy ${{github.workspace}}\build\cpuinfo.exe .\artifacts\bin
+          copy ${{github.workspace}}\CHANGELOG.md .\artifacts
+          copy ${{github.workspace}}\README.md .\artifacts
+
+      - name: Zip artifacts
+        run: 7z a -tzip -mx9 "${{env.ARTIFACT_NAME}}.zip" .\artifacts\*
+
+      - name: Upload Artifact -> Release Artifact (continous)
+        uses: actions/upload-artifact@v1
+        with:
+          name: ${{env.ARTIFACT_NAME}}
+          path: ${{github.workspace}}\artifacts
+
+      - name: Release -> Release Artifact to Github Releases (tagged release)
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: ${{env.ARTIFACT_NAME}}.zip

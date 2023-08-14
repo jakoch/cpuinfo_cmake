@@ -1,0 +1,216 @@
+{
+  "version": 3,
+  "configurePresets": [
+    {
+      "name": "x64-windows",
+      "hidden": true,
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/out/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
+        "CMAKE_VERBOSE_MAKEFILE": "ON"
+      },
+      "architecture": {
+        "value": "x64",
+        "strategy": "external"
+      },
+      "toolset": {
+        "value": "v143,host=x64",
+        "strategy": "external"
+      },
+      "vendor": {
+        "microsoft.com/VisualStudioSettings/CMake/1.0": {
+          "hostOS": [
+            "Windows"
+          ]
+        }
+      }
+    },
+    {
+      "name": "vc17-x64-windows",
+      "hidden": true,
+      "inherits": "x64-windows",
+      "cacheVariables": {
+        "CMAKE_CXX_COMPILER": "cl"
+      },
+      "vendor": {
+        "microsoft.com/VisualStudioSettings/CMake/1.0": {
+          "intelliSenseMode": "windows-msvc-x64"
+        }
+      }
+    },
+    {
+      "name": "clang-x64-windows",
+      "hidden": true,
+      "inherits": "x64-windows",
+      "cacheVariables": {
+        "CMAKE_CXX_COMPILER": "clang-cl"
+      },
+      "vendor": {
+        "microsoft.com/VisualStudioSettings/CMake/1.0": {
+          "intelliSenseMode": "windows-clang-x64"
+        }
+      }
+    },
+    {
+      "name": "vc17-x64-windows-static",
+      "hidden": true,
+      "inherits": "vc17-x64-windows",
+      "cacheVariables": {
+        "BUILD_SHARED_LIBS": "OFF"
+      }
+    },
+    {
+      "name": "clang-x64-windows-static",
+      "hidden": true,
+      "inherits": "clang-x64-windows",
+      "cacheVariables": {
+        "BUILD_SHARED_LIBS": "OFF"
+      }
+    },
+    {
+      "name": "vc17-x64-windows-static-ana",
+      "displayName": "MSVC-Analysis",
+      "inherits": "vc17-x64-windows-static",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "ENABLE_STATIC_ANALYSIS": "ON"
+      }
+    },
+    {
+      "name": "vc17-x64-windows-static-dbg",
+      "displayName": "MSVC-x64-Debug",
+      "inherits": "vc17-x64-windows-static",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "vc17-x64-windows-static-dbg-asan",
+      "hidden": true,
+      "displayName": "MSVC-x64-Debug (ASAN)",
+      "inherits": "vc17-x64-windows-static-dbg",
+      "cacheVariables": {
+        "ENABLE_ASAN": "ON"
+      }
+    },
+    {
+      "name": "vc17-x64-windows-static-rel",
+      "displayName": "MSVC-x64-Release",
+      "inherits": "vc17-x64-windows-static",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "vc17-x64-windows-static-rdi",
+      "displayName": "MSVC-x64-RelWithDebInfo",
+      "inherits": "vc17-x64-windows-static",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+      }
+    },
+    {
+      "name": "clang-x64-windows-static-dbg",
+      "displayName": "Clang-x64-Debug",
+      "inherits": "clang-x64-windows-static",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "clang-x64-windows-static-rel",
+      "displayName": "Clang-x64-Release",
+      "inherits": "clang-x64-windows-static",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "vc17-x64-windows-static-rel-ci",
+      "displayName": "x MSVC-x64-Release (for CI)",
+      "inherits": "vc17-x64-windows-static-rel",
+      "binaryDir": "build",
+      "cacheVariables": {
+        "CMAKE_INSTALL_PREFIX": "install"
+      }
+    },
+    {
+      "name": "vc17-x64-windows-static-dbg-ci",
+      "displayName": "x MSVC-x64-Debug (for CI)",
+      "inherits": "vc17-x64-windows-static-dbg",
+      "binaryDir": "build",
+      "cacheVariables": {
+        "CMAKE_INSTALL_PREFIX": "install"
+      }
+    },
+    {
+      "name": "msys-x64-windows-static-dbg-ci",
+      "description": "X MSYS-x64-Debug (for CI)",
+      "binaryDir": "build",
+      "generator": "MSYS Makefiles",
+      "cacheVariables": {
+        "CMAKE_VERBOSE_MAKEFILE": "ON",
+        "CMAKE_INSTALL_PREFIX": "install",
+        "CMAKE_BUILD_TYPE": "Debug",
+        "BUILD_SHARED_LIBS": "OFF"
+      }
+    },
+    {
+      "name": "msys-x64-windows-static-dbg",
+      "description": "MSYS-x64-Debug",
+      "binaryDir": "build",
+      "generator": "MSYS Makefiles",
+      "cacheVariables": {
+        "CMAKE_VERBOSE_MAKEFILE": "ON",
+        "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
+        "CMAKE_BUILD_TYPE": "Debug",
+        "BUILD_SHARED_LIBS": "OFF"
+      }
+    },
+    {
+      "name": "clang16-x64-windows-static-dbg",
+      "displayName": "Clang 16.0.0",
+      "binaryDir": "${sourceDir}/out/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
+        "CMAKE_CXX_COMPILER": "E:\\tools\\LLVM\\bin\\clang-cl.exe",
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "vc17-x64-windows-static-dbg-main",
+      "displayName": "main",
+      "configurePreset": "vc17-x64-windows-static-dbg",
+      "targets": [
+        "hello_cpuinfo"
+      ]
+    },
+    {
+      "name": "vc17-x64-windows-static-rel-main",
+      "displayName": "main",
+      "configurePreset": "vc17-x64-windows-static-rel",
+      "targets": [
+        "hello_cpuinfo"
+      ]
+    },
+    {
+      "name": "clangcl-x64-windows-static-dbg-main-local",
+      "displayName": "main",
+      "configurePreset": "clang16-x64-windows-static-dbg",
+      "targets": [
+        "hello_cpuinfo"
+      ]
+    },
+    {
+      "name": "clangcl-x64-windows-static-rel-main-local",
+      "displayName": "main",
+      "configurePreset": "clang-x64-windows-static-rel",
+      "targets": [
+        "hello_cpuinfo"
+      ]
+    }
+  ]
+}
