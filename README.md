@@ -50,11 +50,21 @@ transitioning it into an standalone project for execution and testing.
 The goal is to ensure that the C++ code operates smoothly before integrating
 it back into the CMake script.
 
+## Prerequisites
+
+- `cpuinfo` is a standalone executable for Windows. No dependencies or requirements.
+
+- `CPUINFO.cmake` depends on CMake and a C++ compiler.
+   - CMake is required, because the script requires to be included into your CMake workflow.
+   - C++ Compiler is required, because the embedded C++ source requires to be compiled on-the-fly.
+
 ## How to use CPUINFO.cmake?
 
-1. Simply download the latest release and copy the `CPUINFO.cmake` file into your CMake modules folder, e.g. `project/cmake`
+1. Simply download the [latest release](https://github.com/jakoch/cpuinfo_cmake/releases/latest).
 
-2. Add `include(CPUINFO)` to your `CMakeLists.txt`
+2. copy the `CPUINFO.cmake` file into your CMake modules folder, e.g. `project/cmake`
+
+3. Add `include(CPUINFO)` to your `CMakeLists.txt`
 
 ```
 # set cmake module path for includes
@@ -171,6 +181,9 @@ Some features might not be present on all processors.
 - <https://docs.microsoft.com/en-us/cpp/intrinsics/cpuid-cpuidex?view=vs-2019>
 - <https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/arch/x86/include/asm/cpufeatures.h>
 - Intel Manual "cpuid": <https://www.scss.tcd.ie/Jeremy.Jones/CS4021/processor-identification-cpuid-instruction-note.pdf>
+- http://instlatx64.atw.hu/
+- https://asmjit.com/asmgrid/
+- https://en.wikipedia.org/wiki/CPUID
 
 ## Projects and build order in this repository
 
