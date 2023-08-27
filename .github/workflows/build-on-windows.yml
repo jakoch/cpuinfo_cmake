@@ -21,6 +21,9 @@ jobs:
     name: "Windows VC17"
     runs-on: windows-2022
 
+    permissions:
+      contents: write
+
     strategy:
       fail-fast: false
       matrix:
