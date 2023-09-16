@@ -11,8 +11,9 @@
 #include <sstream>
 #include <vector>
 #include <chrono>
+#include <iomanip> // for std::put_time
 
-#if _WIN32
+#if _WIN32 || WIN32
 #include <intrin.h> // __cpuid, __cpuidex
 #elif defined(__i386__) || defined(__x86_64__)
 #include <cpuid.h>
