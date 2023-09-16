@@ -17,10 +17,10 @@ include(SetupCompileOptions)
 
 project(cpuinfo_for_cmake VERSION 1.0.0 LANGUAGES CXX)
 
-MESSAGE("CMAKE_HOST_SYSTEM_NAME    -> ${CMAKE_HOST_SYSTEM_NAME}")
-MESSAGE("CMAKE_HOST_SYSTEM_VERSION -> ${CMAKE_HOST_SYSTEM_VERSION}")
-MESSAGE("WIN32                     -> ${WIN32}")
-MESSAGE("CMAKE_HOST_WIN32          -> ${CMAKE_HOST_WIN32}")
+message("CMAKE_HOST_SYSTEM_NAME    -> ${CMAKE_HOST_SYSTEM_NAME}")
+message("CMAKE_HOST_SYSTEM_VERSION -> ${CMAKE_HOST_SYSTEM_VERSION}")
+message("WIN32                     -> ${WIN32}")
+message("CMAKE_HOST_WIN32          -> ${CMAKE_HOST_WIN32}")
 
 #-------------------------------------------------------------------
 # C++Standard
