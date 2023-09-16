@@ -1,4 +1,4 @@
-# CPUINFO for CMake
+# CPUINFO for CMake [![Build](https://github.com/jakoch/cpuinfo_cmake/actions/workflows/build-on-windows.yml/badge.svg)](https://github.com/jakoch/cpuinfo_cmake/actions/workflows/build-on-windows.yml)
 
 cpuinfo is a C++ based CLI tool and CMake script for CPU ISA feature flag checking.
 
