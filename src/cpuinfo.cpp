@@ -452,7 +452,8 @@ int main()
     if(InstructionSet::AVX512F()) { architecture = "x86-64-v4"; } else
     if(InstructionSet::AVX2())    { architecture = "x86-64-v3"; } else
     if(InstructionSet::SSE42())   { architecture = "x86-64-v2"; } else
-    if(InstructionSet::SSE2())    { architecture = "x86-64-v1"; }
+    if(InstructionSet::SSE2())    { architecture = "x86-64-v1"; } else
+                                  { architecture = "x86-64"; }
 
     std::string vendor = InstructionSet::Vendor();
     std::string brand = InstructionSet::Brand();
