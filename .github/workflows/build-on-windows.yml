@@ -159,7 +159,7 @@ jobs:
           path: ${{github.workspace}}\artifacts
 
       - name: Release -> Release Artifact to Github Releases (tagged release)
-        uses: softprops/action-gh-release@v1 # https://github.com/softprops/action-gh-release
+        uses: softprops/action-gh-release@v2 # https://github.com/softprops/action-gh-release
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: ${{env.ARTIFACT_NAME}}.zip
