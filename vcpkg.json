@@ -4,5 +4,6 @@
   "description": "cpuinfo is a C++ based CLI tool and CMake script for CPU ISA feature flag checking.",
   "homepage": "https://github.com/jakoch/cpuinfo_cmake",
   "license": "MIT",
-  "supports": "windows & x64"
+  "supports": "windows & x64",
+  "dependencies": []
 }

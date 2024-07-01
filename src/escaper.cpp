@@ -166,7 +166,7 @@ std::string getCurrentTime()
     return timeStream.str();
 }
 
-int main(int argc, char* argv[])
+int main()
 {
     /**
      * Step 1

@@ -15,20 +15,16 @@ include(SetupCompileOptions)
 # Project
 #-------------------------------------------------------------------
 
-project(cpuinfo_for_cmake VERSION 1.0.0 LANGUAGES CXX)
+# vcpkg.json is the primary source for version data
+file(READ ${CMAKE_SOURCE_DIR}/vcpkg.json VCPKG_JSON_STRING)
+string(JSON APP_VERSION GET ${VCPKG_JSON_STRING} "version")
+
+project(cpuinfo_for_cmake VERSION ${APP_VERSION} LANGUAGES CXX)
 
 message("CMAKE_HOST_SYSTEM_NAME    -> ${CMAKE_HOST_SYSTEM_NAME}")
 message("CMAKE_HOST_SYSTEM_VERSION -> ${CMAKE_HOST_SYSTEM_VERSION}")
 message("WIN32                     -> ${WIN32}")
 message("CMAKE_HOST_WIN32          -> ${CMAKE_HOST_WIN32}")
-
-#-------------------------------------------------------------------
-# C++Standard
-#-------------------------------------------------------------------
-
-set(CMAKE_CXX_STANDARD           20)
-set(CMAKE_CXX_STANDARD_REQUIRED  ON)
-set(CMAKE_CXX_EXTENSIONS        OFF)
 
 #-------------------------------------------------------------------
 # Build Options
@@ -75,3 +71,5 @@ add_custom_target(escaper_template_resources
   COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/data/cpuinfo.cmake.tpl ${CMAKE_CURRENT_BINARY_DIR}
 )
 add_dependencies(escaper escaper_template_resources)
+
+set_compile_options(escaper PUBLIC)

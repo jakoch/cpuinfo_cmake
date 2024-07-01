@@ -22,6 +22,12 @@ endif()
 #
 function(set_compile_options TARGET SCOPE)
 
+  #-----------------------------------------------------
+  # C++Standard
+  #-----------------------------------------------------
+  target_compile_features(${TARGET} ${SCOPE} cxx_std_20)
+
+
   if (CMAKE_CXX_COMPILER_ID MATCHES Clang)
 
     message("${TARGET} : Detected Clang compiler.")
@@ -30,34 +36,34 @@ function(set_compile_options TARGET SCOPE)
 
   elseif (CMAKE_CXX_COMPILER_ID MATCHES GNU)
 
-	message("${TARGET} : Detected GNU compiler.")
+	  message("${TARGET} : Detected GNU compiler.")
 
-	target_compile_options(${TARGET} ${SCOPE} -Wall -Wextra -Wpedantic -Werror)
+	  target_compile_options(${TARGET} ${SCOPE} -Wall -Wextra -Wpedantic -Werror)
 
   elseif (CMAKE_CXX_COMPILER_ID MATCHES MSVC)
 
-	message("${TARGET} : Detected MSVC compiler.")
+	  message("${TARGET} : Detected MSVC compiler.")
 
-	target_compile_definitions(${TARGET} ${SCOPE}
-	  NOMINMAX
-	  UNICODE
-	  _UNICODE
-	  _SILENCE_CXX17_UNCAUGHT_EXCEPTION_DEPRECATION_WARNING
-      _CRT_SECURE_NO_WARNINGS
-	)
+    target_compile_definitions(${TARGET} ${SCOPE}
+      NOMINMAX
+      UNICODE
+      _UNICODE
+      _SILENCE_CXX17_UNCAUGHT_EXCEPTION_DEPRECATION_WARNING
+        _CRT_SECURE_NO_WARNINGS
+    )
 
-	target_compile_options(${TARGET} ${SCOPE}
-	  /Zc:__cplusplus
-	  /Zc:alignedNew
-	  /permissive-
-	  /W4
-	  /WX
-	  /utf-8
-	  /MP
-	)
+    target_compile_options(${TARGET} ${SCOPE}
+      /Zc:__cplusplus
+      /Zc:alignedNew
+      /permissive-
+      /W4
+      /WX
+      /utf-8
+      /MP
+    )
 
   else()
-	message(FATAL_ERROR "${TARGET} : Compiler unsupported, aborting.\n")
+	  message(FATAL_ERROR "${TARGET} : Compiler unsupported, aborting.\n")
   endif()
 
 endfunction()

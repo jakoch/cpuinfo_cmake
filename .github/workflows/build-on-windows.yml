@@ -130,8 +130,8 @@ jobs:
       - name: ✏ Fetch Versioning Data & Set Artifact Name
         shell: pwsh
         run: |
-            $NAME=$(jq -r .name version.json)
-            $VERSION=$(jq -r .version version.json)
+            $NAME=$(jq -r .name vcpkg.json)
+            $VERSION=$(jq -r .version vcpkg.json)
             $SHORT_HASH=$($env:GITHUB_SHA.substring(0,7))
             $PRESET=$(("${{matrix.config.PRESET}}" -split "-")[0,1,3,4] -join "-")
             $ARTIFACT_NAME="$NAME-$VERSION-$SHORT_HASH-$PRESET"
