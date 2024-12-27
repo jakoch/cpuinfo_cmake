@@ -184,6 +184,7 @@ Some features might not be present on all processors.
 - http://instlatx64.atw.hu/
 - https://asmjit.com/asmgrid/
 - https://en.wikipedia.org/wiki/CPUID
+- https://github.com/gsuberland/web-cpuid + https://cpuid.apps.poly.nomial.co.uk/
 
 ## Projects and build order in this repository
 
